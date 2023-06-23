@@ -43,7 +43,11 @@ function messingAround() {
 
   for (let i = 0; i < 12; i++) {
     today.setMonth(i)
-    months.push(today.toLocaleString('default', {month: 'long'}))
+    months.push(
+      {
+        monthName: today.toLocaleString('default', {month: 'long'}),
+        monthNum: i
+      })
   }
   Logger.log(months)
 
@@ -57,4 +61,7 @@ function messingAround() {
   const newMonthAsDate = new Date()
   newMonthAsDate.setMonth(newMonth)
   Logger.log(newMonthAsDate.getMonth())
+
+  const thisMonth = months.filter((obj) => obj.monthNum === newMonthAsDate.getMonth())
+  Logger.log(thisMonth)
 }
