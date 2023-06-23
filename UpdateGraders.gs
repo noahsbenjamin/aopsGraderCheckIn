@@ -36,11 +36,13 @@ function findColumnNumber (sheet, columnName) {
 
 
 function messingAround() {
+  // Grab all headings
   const date = checkinSheet.getRange(1,1,1,checkinSheet.getLastColumn()).getDisplayValues()
   Logger.log(date)
   const today = new Date()
   const months = []
 
+  // Add an object for each month with full month name and JS month number (Jan = 0, Feb = 1, etc.)
   for (let i = 0; i < 12; i++) {
     today.setMonth(i)
     months.push(
@@ -51,17 +53,22 @@ function messingAround() {
   }
   Logger.log(months)
 
+  // Exploring grabbing check in date to use for averages since that month
   const recentCheckin = checkinSheet.getRange(3, 3).getDisplayValue()
   Logger.log(recentCheckin)
-
   const month = recentCheckin.split('/')[0]
   Logger.log(month)
+
+  // Change month from checkin to a number, then find the long month name, year in the headings.
   const newMonth = parseInt(month, 10) - 1
   Logger.log(newMonth)
   const newMonthAsDate = new Date()
   newMonthAsDate.setMonth(newMonth)
   Logger.log(newMonthAsDate.getMonth())
 
-  const thisMonth = months.filter((obj) => obj.monthNum === newMonthAsDate.getMonth())
-  Logger.log(thisMonth)
+  // Find month object that matches the most recent heading
+  const thisMonth = months.filter((obj) => obj.monthNum === newMonth - 1)
+  // Find the position in the headings array so we know the column. All of this will probably be unnecssary if the sheet remains consistent.
+  Logger.log(date[0].indexOf(`${thisMonth[0].monthName} ${newMonthAsDate.getFullYear()}`))
+
 }
