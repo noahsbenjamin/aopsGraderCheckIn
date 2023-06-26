@@ -1,5 +1,4 @@
 // Here is our code
-// test comment
 
 const checkinSheet = SpreadsheetApp.openById('1P6zePMqCGSBxmLiv3sgIidoTKOF61vTV6-wXX5t_psg').getSheetByName('GraderData')
 const contractorsUniversal = SpreadsheetApp.openById('1QFD2-76RIHwd_WEe5HooOKDkggiMuS5gR3iA7mCv8rc').getSheetByName('Master List')
@@ -9,24 +8,24 @@ function getGraders() {
   const lastRow = contractorsUniversal.getLastRow()
   const graderColumn = findColumnNumber(contractorsUniversal, 'Grade')
   const data = contractorsUniversal.getRange(2, 1, lastRow, graderColumn).getDisplayValues(); // User ID is index 0 and Grade index is graderColumn - 1
-  const graderIds = []
+  const graderUsernames = []
 
   data.forEach((datum) => {
     if (datum[graderColumn - 1] ==='Y') {
-      graderIds.push([datum[2]])
+      graderUsernames.push([datum[2]])
     }
   })
-  return graderIds
-}
 
+  return graderUsernames
+}
 
 // Main Function: Updates username column with all graders
 function updateGraders() {
-  const graderIds = getGraders()
+  const graderUsernames = getGraders()
   const allGradersCol = findColumnNumber(checkinSheet, 'Graders')
 
   checkinSheet.getRange(3, allGradersCol, checkinSheet.getLastRow()).clear()
-  checkinSheet.getRange(3, allGradersCol, graderIds.length).setValues(graderIds)
+  checkinSheet.getRange(3, allGradersCol, graderUsernames.length).setValues(graderUsernames)
 }
 
 
