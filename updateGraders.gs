@@ -1,13 +1,12 @@
-// Here is our code
+// Global Variables
+const CHECKINSHEET = SpreadsheetApp.openById('1P6zePMqCGSBxmLiv3sgIidoTKOF61vTV6-wXX5t_psg').getSheetByName('GraderData')
+const CONTRACTORSUNIVERAL = SpreadsheetApp.openById('1QFD2-76RIHwd_WEe5HooOKDkggiMuS5gR3iA7mCv8rc').getSheetByName('Master List')
 
-const checkinSheet = SpreadsheetApp.openById('1P6zePMqCGSBxmLiv3sgIidoTKOF61vTV6-wXX5t_psg').getSheetByName('GraderData')
-const contractorsUniversal = SpreadsheetApp.openById('1QFD2-76RIHwd_WEe5HooOKDkggiMuS5gR3iA7mCv8rc').getSheetByName('Master List')
-
-// Returns 2D array of grader IDs from Contractor's Universal - used by updateTrackingSheet
+// Returns 2D array of grader usernames from Contractor's Universal - used by Grader Tracking
 function getGraders() {
-  const lastRow = contractorsUniversal.getLastRow()
-  const graderColumn = findColumnNumber(contractorsUniversal, 'Grade')
-  const data = contractorsUniversal.getRange(2, 1, lastRow, graderColumn).getDisplayValues(); // User ID is index 0 and Grade index is graderColumn - 1
+  const lastRow = CONTRACTORSUNIVERAL.getLastRow()
+  const graderColumn = findColumnNumber(CONTRACTORSUNIVERAL, 'Grade')
+  const data = CONTRACTORSUNIVERAL.getRange(2, 1, lastRow, graderColumn).getDisplayValues(); // User ID is index 0 and Grade index is graderColumn - 1
   const graderUsernames = []
 
   data.forEach((datum) => {
@@ -22,14 +21,14 @@ function getGraders() {
 // Main Function: Updates username column with all graders
 function updateGraders() {
   const graderUsernames = getGraders()
-  const allGradersCol = findColumnNumber(checkinSheet, 'Graders')
+  const allGradersCol = findColumnNumber(CHECKINSHEET, 'Graders')
 
-  checkinSheet.getRange(3, allGradersCol, checkinSheet.getLastRow()).clear()
-  checkinSheet.getRange(3, allGradersCol, graderUsernames.length).setValues(graderUsernames)
+  CHECKINSHEET.getRange(3, allGradersCol, CHECKINSHEET.getLastRow()).clear()
+  CHECKINSHEET.getRange(3, allGradersCol, graderUsernames.length).setValues(graderUsernames)
 }
 
 
-// Helper function to find column number of 'Grade' column in Contractor's Universal
+// Helper function to find column number based on column name
 function findColumnNumber (sheet, columnName) {
   const columnHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()
 
@@ -39,7 +38,7 @@ function findColumnNumber (sheet, columnName) {
 
 function messingAround() {
   // Grab all headings
-  const date = checkinSheet.getRange(1,1,1,checkinSheet.getLastColumn()).getDisplayValues()
+  const date = CHECKINSHEET.getRange(1,1,1,CHECKINSHEET.getLastColumn()).getDisplayValues()
   Logger.log(date)
   const today = new Date()
   const months = []
@@ -56,7 +55,7 @@ function messingAround() {
   Logger.log(months)
 
   // Exploring grabbing check in date to use for averages since that month
-  const recentCheckin = checkinSheet.getRange(3, 3).getDisplayValue()
+  const recentCheckin = CHECKINSHEET.getRange(3, 3).getDisplayValue()
   Logger.log(recentCheckin)
   const month = recentCheckin.split('/')[0]
   Logger.log(month)
